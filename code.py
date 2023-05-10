@@ -7,7 +7,7 @@ soup = BeautifulSoup(r.content, 'html.parser')
 print(soup.prettify())
 print(soup.title)
 
-text = soup.find_all(text = 'programming')
+text = soup.find_all(text = 'Python')
 print("List = ",text)
 size = len(text)
 print("Count = ",size)
