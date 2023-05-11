@@ -1,13 +1,17 @@
 import requests
 from bs4 import BeautifulSoup
 
-r = requests.get('https://www.geeksforgeeks.org/python-programming-language/')
+#Requesting URL
+r = requests.get('https://www.geeksforgeeks.org/java/')
 
+# Converting to Html Code 
 soup = BeautifulSoup(r.content, 'html.parser')
 print(soup.prettify())
+
+#Exctracting Title of Web Page
 print(soup.title)
 
-text = soup.find_all(text = 'Python')
-print("List = ",text)
-size = len(text)
-print("Count = ",size)
+#Finding Occurence Of a Specific Word in Web Page
+text = soup.get_text(strip=True).lower().count('Hello World'.lower())
+print("Count = ",text)
+
