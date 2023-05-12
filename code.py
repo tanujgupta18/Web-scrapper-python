@@ -1,17 +1,29 @@
 import requests
 from bs4 import BeautifulSoup
 
-#Requesting URL
-r = requests.get('https://www.geeksforgeeks.org/java/')
+# Define the list of URLs to scrape
+urls = [
+    'https://en.wikipedia.org/wiki/Web_scraping',
+    'https://en.wikipedia.org/wiki/Data_scraping',
+    'https://en.wikipedia.org/wiki/Data_extraction'
+]
 
-# Converting to Html Code 
-soup = BeautifulSoup(r.content, 'html.parser')
-print(soup.prettify())
+words_to_find = ['Data','Scraping']
 
-#Exctracting Title of Web Page
-print(soup.title)
+# Iterate through the URLs and perform scraping
+for url in urls:
+    response = requests.get(url)
 
-#Finding Occurence Of a Specific Word in Web Page
-text = soup.get_text(strip=True).lower().count('Hello World'.lower())
-print("Count = ",text)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
 
+        content = soup.get_text().lower()
+
+        occurrences = [content.count(word.lower()) for word in words_to_find]
+
+        print(f"Occurrences in {url}:")
+        for word, count in zip(words_to_find, occurrences):
+            print(f"The word '{word}' appeared {count} times.")
+        print()
+    else:
+        print(f"Failed to retrieve {url}. Status code: {response.status_code}")
