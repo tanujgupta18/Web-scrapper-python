@@ -1,29 +1,23 @@
-import requests
-from bs4 import BeautifulSoup
+import pandas as pd
+# Input Excel File
+df = pd.read_excel('C:\\Users\\Tanuj Gupta\\Desktop\\Web Scraping\\Book1.xlsx', sheet_name='Sheet1')
 
-# Define the list of URLs to scrape
-urls = [
-    'https://en.wikipedia.org/wiki/Web_scraping',
-    'https://en.wikipedia.org/wiki/Data_scraping',
-    'https://en.wikipedia.org/wiki/Data_extraction'
-]
+for index, row in df.iterrows():
+    url = row['URL']
+    words = row['Words'].split(',')
 
-words_to_find = ['Data','Scraping']
+    # Performing Word Count
+    word_counts = {}
+    for word in words:
+        word = word.strip().lower()
+        count = 0
 
-# Iterate through the URLs and perform scraping
-for url in urls:
-    response = requests.get(url)
+        if word in url.lower():
+            count += 1
 
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.content, 'html.parser')
+        word_counts[word] = count
 
-        content = soup.get_text().lower()
+    df.at[index, 'Word Counts'] = str(word_counts)
 
-        occurrences = [content.count(word.lower()) for word in words_to_find]
-
-        print(f"Occurrences in {url}:")
-        for word, count in zip(words_to_find, occurrences):
-            print(f"The word '{word}' appeared {count} times.")
-        print()
-    else:
-        print(f"Failed to retrieve {url}. Status code: {response.status_code}")
+# Generating Output Excel File
+df.to_excel('output.xlsx', index=False)
